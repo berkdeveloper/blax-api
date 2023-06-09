@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{CB9E2DE0-0E39-4183-A786-318938540968}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{C1A73A36-A5DF-46C7-B268-D02EA1ED6656}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{6E9369E9-8251-4352-96BA-D093420B3679}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlaX.CryptoAutoTrading.Domain", "src\Core\BlaX.CryptoAutoTrading.Domain\BlaX.CryptoAutoTrading.Domain.csproj", "{8998CDFE-9AA2-4E85-AC0A-349030328505}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlaX.CryptoAutoTrading.Domain.Core", "src\Core\BlaX.CryptoAutoTrading.Domain.Core\BlaX.CryptoAutoTrading.Domain.Core.csproj", "{11DA50EE-6840-45D5-9221-B7FEDC006F85}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlaX.CryptoAutoTrading.Application", "src\Application\BlaX.CryptoAutoTrading.Application\BlaX.CryptoAutoTrading.Application.csproj", "{304981BB-F5AB-4739-BD83-3C5BC49DC34A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlaX.CryptoAutoTrading.Infrastructure", "src\Infrastructure\BlaX.CryptoAutoTrading.Infrastructure\BlaX.CryptoAutoTrading.Infrastructure.csproj", "{9018969E-DB58-4B13-95CE-F99F04C709E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlaX.CryptoAutoTrading.ExternalClients", "src\Application\BlaX.CryptoAutoTrading.ExternalClients\BlaX.CryptoAutoTrading.ExternalClients.csproj", "{B298DF17-B8AC-4425-91FC-F1BEC13051F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{428E8603-6BB4-45E2-9F25-D40DAC51A7D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlaX.CryptoAutoTrading.API", "src\Presentation\BlaX.CryptoAutoTrading.API\BlaX.CryptoAutoTrading.API.csproj", "{04F7626E-9C59-48D1-8E21-518D544DA8FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlaX.CryptoAutoTrading.Persistence", "src\Infrastructure\BlaX.CryptoAutoTrading.Persistence\BlaX.CryptoAutoTrading.Persistence.csproj", "{4FBAD65D-03C9-44A4-B9E0-01EA18289BEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8998CDFE-9AA2-4E85-AC0A-349030328505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8998CDFE-9AA2-4E85-AC0A-349030328505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8998CDFE-9AA2-4E85-AC0A-349030328505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8998CDFE-9AA2-4E85-AC0A-349030328505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11DA50EE-6840-45D5-9221-B7FEDC006F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11DA50EE-6840-45D5-9221-B7FEDC006F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11DA50EE-6840-45D5-9221-B7FEDC006F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11DA50EE-6840-45D5-9221-B7FEDC006F85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304981BB-F5AB-4739-BD83-3C5BC49DC34A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304981BB-F5AB-4739-BD83-3C5BC49DC34A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304981BB-F5AB-4739-BD83-3C5BC49DC34A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304981BB-F5AB-4739-BD83-3C5BC49DC34A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9018969E-DB58-4B13-95CE-F99F04C709E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9018969E-DB58-4B13-95CE-F99F04C709E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9018969E-DB58-4B13-95CE-F99F04C709E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9018969E-DB58-4B13-95CE-F99F04C709E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B298DF17-B8AC-4425-91FC-F1BEC13051F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B298DF17-B8AC-4425-91FC-F1BEC13051F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B298DF17-B8AC-4425-91FC-F1BEC13051F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B298DF17-B8AC-4425-91FC-F1BEC13051F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04F7626E-9C59-48D1-8E21-518D544DA8FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04F7626E-9C59-48D1-8E21-518D544DA8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04F7626E-9C59-48D1-8E21-518D544DA8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04F7626E-9C59-48D1-8E21-518D544DA8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FBAD65D-03C9-44A4-B9E0-01EA18289BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FBAD65D-03C9-44A4-B9E0-01EA18289BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FBAD65D-03C9-44A4-B9E0-01EA18289BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FBAD65D-03C9-44A4-B9E0-01EA18289BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8998CDFE-9AA2-4E85-AC0A-349030328505} = {6E9369E9-8251-4352-96BA-D093420B3679}
+		{11DA50EE-6840-45D5-9221-B7FEDC006F85} = {6E9369E9-8251-4352-96BA-D093420B3679}
+		{304981BB-F5AB-4739-BD83-3C5BC49DC34A} = {CB9E2DE0-0E39-4183-A786-318938540968}
+		{9018969E-DB58-4B13-95CE-F99F04C709E0} = {C1A73A36-A5DF-46C7-B268-D02EA1ED6656}
+		{B298DF17-B8AC-4425-91FC-F1BEC13051F3} = {CB9E2DE0-0E39-4183-A786-318938540968}
+		{04F7626E-9C59-48D1-8E21-518D544DA8FD} = {428E8603-6BB4-45E2-9F25-D40DAC51A7D7}
+		{4FBAD65D-03C9-44A4-B9E0-01EA18289BEA} = {C1A73A36-A5DF-46C7-B268-D02EA1ED6656}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {662D0C73-26F6-4581-ABD0-724460271D09}
+	EndGlobalSection
+EndGlobal
