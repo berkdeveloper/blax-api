@@ -1,7 +1,6 @@
 ﻿using BlaX.CryptoAutoTrading.Application.Exceptions.BinanceExceptions;
 using BlaX.CryptoAutoTrading.Application.Exceptions.Common;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Concrete;
-using BlaX.CryptoAutoTrading.ExternalClients.Binance.Common;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -37,6 +36,7 @@ namespace BlaX.CryptoAutoTrading.API.Middlewares
             int statusCode = exception switch
             {
                 BinanceWalletSystemConnectionErrorException => GetHttpStatusCodeAsInt(HttpStatusCode.InternalServerError),
+                BinanceSystemInternalServerErrorException => GetHttpStatusCodeAsInt(HttpStatusCode.InternalServerError),
                 BadRequestErrorException => GetHttpStatusCodeAsInt(HttpStatusCode.BadRequest),
                 NotFoundErrorException => GetHttpStatusCodeAsInt(HttpStatusCode.NotFound),
                 UnauthorizedAccessException => GetHttpStatusCodeAsInt(HttpStatusCode.Unauthorized),
@@ -45,14 +45,16 @@ namespace BlaX.CryptoAutoTrading.API.Middlewares
 
             string message = exception.Message;
 
-            try
-            {
-                if (string.IsNullOrEmpty(((BinanceClientException)exception)?.ErrorMessage) is false)
-                    message = ((BinanceClientException)exception)?.ErrorMessage;
-                else
-                    message = exception.Message;
-            }
-            catch { }
+            #region LookHere
+            //try
+            //{
+            //    if (string.IsNullOrEmpty(((BinanceClientException)exception)?.ErrorMessage) is false)
+            //        message = ((BinanceClientException)exception)?.ErrorMessage;
+            //    else
+            //        message = exception.Message;
+            //}
+            //catch { }
+            #endregion
 
             var errorResponse = new ErrorResponseBaseDto(statusCode: statusCode, message);
             var errorObjectJsonFormat = JsonConvert.SerializeObject(errorResponse);

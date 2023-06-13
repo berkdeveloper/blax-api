@@ -43,7 +43,11 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Core\BlaX.CryptoAutoTrading.Domain\BlaX.CryptoAutoTrading.Domain.csproj" />
-		<ProjectReference Include="..\BlaX.CryptoAutoTrading.ExternalClients\BlaX.CryptoAutoTrading.ExternalClients.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="DTOs\BinanceDTOs\BaseDTOs\" />
+	  <Folder Include="ViewModels\BinanceViewModels\" />
 	</ItemGroup>
 
 </Project>

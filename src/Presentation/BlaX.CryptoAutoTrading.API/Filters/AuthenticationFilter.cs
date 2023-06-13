@@ -1,12 +1,10 @@
-﻿using BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceMarketDto.Response;
-using BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.BaseObjectDto;
+﻿using BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.BaseObjectDto;
 using BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.UserDto;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.ComplexTypes;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Concrete;
 using BlaX.CryptoAutoTrading.Application.Utilities.Extensions;
 using BlaX.CryptoAutoTrading.Application.Utilities.Helpers;
-using BlaX.CryptoAutoTrading.Application.ViewModels.BinanceViewModels.MarketViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;

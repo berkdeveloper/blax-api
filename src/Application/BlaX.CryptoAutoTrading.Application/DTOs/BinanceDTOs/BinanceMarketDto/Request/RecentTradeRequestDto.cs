@@ -2,7 +2,8 @@
 
 namespace BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceMarketDto.Request
 {
-    public class SymbolPriceTickerRequestDto : SymbolRequestBase
+    public class RecentTradeRequestDto : SymbolRequestBase
     {
+        public int? Limit { get; set; }
     }
 }

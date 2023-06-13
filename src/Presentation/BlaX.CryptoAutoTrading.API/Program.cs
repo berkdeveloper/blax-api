@@ -1,6 +1,7 @@
 using BlaX.CryptoAutoTrading.API.Extensions;
 using BlaX.CryptoAutoTrading.API.Filters;
 using BlaX.CryptoAutoTrading.API.Middlewares;
+using BlaX.CryptoAutoTrading.API.Middlewares.BinanceMiddlewares;
 using BlaX.CryptoAutoTrading.Domain;
 using BlaX.CryptoAutoTrading.Infrastructure;
 using BlaX.CryptoAutoTrading.Persistence;
@@ -84,7 +85,7 @@ if (app.Environment.IsDevelopment())
     //app.UseDeveloperExceptionPage();
 }
 
-#region Custom Exception Middlewares
+#region Custom Middlewares
 app.ConfigureCustomExceptionMiddleware();
 #endregion
 
@@ -95,6 +96,7 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
 app.UseMiddleware<JwtBearerTokenMiddleware>();
+app.UseMiddleware<BinanceSystemStatusMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,7 +1,8 @@
 ﻿using BlaX.CryptoAutoTrading.Application.Abstractions.Services.BinanceServices;
+using BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceMarketDto.Request;
+using BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceMarketDto.Response;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.RequestBases;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Concrete;
-using BlaX.CryptoAutoTrading.Application.ViewModels.BinanceViewModels.MarketViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -16,9 +17,9 @@ namespace BlaX.CryptoAutoTrading.API.Controllers
         public BinanceMarketsController(IBinanceMarketService binanceMarketService) => _binanceMarketService = binanceMarketService;
 
         [HttpGet("get-latest-price")]
-        [ProducesResponseType(typeof(ObjectResponseBase<SymbolPriceTickerViewModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ObjectResponseBase<SymbolPriceTickerViewModel>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(ObjectResponseBase<SymbolPriceTickerViewModel>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ObjectResponseBase<SymbolPriceTickerResponseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ObjectResponseBase<SymbolPriceTickerResponseDto>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ObjectResponseBase<SymbolPriceTickerResponseDto>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetSymbolPrice([FromQuery] SymbolRequestBase request)
         {
             var response = await _binanceMarketService.GetSymbolPrice(request);
@@ -26,20 +27,20 @@ namespace BlaX.CryptoAutoTrading.API.Controllers
         }
 
         [HttpGet("get-old-trades")]
-        [ProducesResponseType(typeof(ListBaseResponse<OldTradeLookupViewModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ListBaseResponse<OldTradeLookupViewModel>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(ListBaseResponse<OldTradeLookupViewModel>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ListBaseResponse<BinanceTradeResponseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ListBaseResponse<BinanceTradeResponseDto>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ListBaseResponse<BinanceTradeResponseDto>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetOldTradeLookup([FromQuery] SymbolRequestBase request)
         {
-            var response = await _binanceMarketService.GetOldTradeLookup(request);
+            var response = await _binanceMarketService.GetUserTrades(request);
             return ActionResponse(response);
         }
 
         [HttpGet("get-recent-trades")]
-        [ProducesResponseType(typeof(ListBaseResponse<RecentTradesViewModel>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ListBaseResponse<RecentTradesViewModel>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(ListBaseResponse<RecentTradesViewModel>), (int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetRecentTradesList([FromQuery] SymbolRequestBase request)
+        [ProducesResponseType(typeof(ListBaseResponse<RecentTradeResponseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ListBaseResponse<RecentTradeResponseDto>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ListBaseResponse<RecentTradeResponseDto>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetRecentTradesList([FromQuery] RecentTradeRequestDto request)
         {
             var response = await _binanceMarketService.GetRecentTradesList(request);
             return ActionResponse(response);

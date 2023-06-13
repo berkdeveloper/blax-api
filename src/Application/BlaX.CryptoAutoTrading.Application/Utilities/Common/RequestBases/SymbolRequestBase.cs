@@ -7,7 +7,7 @@
         /// </summary>
         public string Symbol { get; set; }
 
-        public SymbolRequestBase() { Symbol = "ETHUSDT"; }
+        public SymbolRequestBase() { Symbol = "USDTTRY"; }
 
         public SymbolRequestBase(string symbol) => Symbol = symbol;
     }

@@ -1,5 +1,4 @@
 ﻿using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases;
-using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 

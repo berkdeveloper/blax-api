@@ -11,6 +11,7 @@ namespace BlaX.CryptoAutoTrading.Infrastructure
             services.AddScoped<IBinanceMarketService, BinanceMarketService>();
             services.AddScoped<IBinanceWalletService, BinanceWalletService>();
             services.AddScoped<IBinanceAccountTradeService, BinanceAccountTradeService>();
+            services.AddScoped<IBinanceAccountTradeHandler, BinanceAccountTradeService>();
             return services;
         }
     }

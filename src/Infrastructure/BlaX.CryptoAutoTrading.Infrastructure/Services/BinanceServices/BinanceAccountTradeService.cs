@@ -1,35 +1,30 @@
 ﻿using Binance.Net.Clients;
-using Binance.Net.Enums;
 using Binance.Net.Objects;
 using BlaX.CryptoAutoTrading.Application.Abstractions.Services.BinanceServices;
 using BlaX.CryptoAutoTrading.Application.DTOs;
 using BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceAccountTradeDto.Request;
+using BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceAccountTradeDto.Response;
 using BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.BaseObjectDto;
 using BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.UserDto;
 using BlaX.CryptoAutoTrading.Application.Exceptions.Common;
-using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases;
+using BlaX.CryptoAutoTrading.Application.Utilities.Common.RequestBases;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Concrete;
-using BlaX.CryptoAutoTrading.Application.Utilities.Extensions;
 using BlaX.CryptoAutoTrading.Application.Utilities.Helpers;
-using BlaX.CryptoAutoTrading.Application.ViewModels.BinanceViewModels.AccountTradeViewModels;
+using BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.BinanceServiceHelpers;
 using BlaX.CryptoAutoTrading.Domain.AppSettings.BinanceAppSetting;
 using BlaX.CryptoAutoTrading.Domain.Core.Constants;
-using BlaX.CryptoAutoTrading.ExternalClients.Binance.Common;
-using BlaX.CryptoAutoTrading.ExternalClients.Binance.Spot;
-using BlaX.CryptoAutoTrading.ExternalClients.Binance.Spot.Models;
-using CryptoExchange.Net.Authentication;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace BlaX.CryptoAutoTrading.Infrastructure.Services.BinanceServices
 {
-    public class BinanceAccountTradeService : IBinanceAccountTradeService
+    public class BinanceAccountTradeService : IBinanceAccountTradeService, IBinanceAccountTradeHandler
     {
         private readonly BinanceClient _binanceClient;
         readonly ILogger _logger;
         readonly BinanceAuthorization _binanceAuthorization;
-        private readonly SpotAccountTrade _spotAccountTrade;
+        //private readonly SpotAccountTrade _spotAccountTrade;
 
         public BinanceAccountTradeService(IOptions<BinanceAuthorization> binanceAuthorizationOptions, ILogger<BinanceAccountTradeService> logger)
         {
@@ -45,40 +40,42 @@ namespace BlaX.CryptoAutoTrading.Infrastructure.Services.BinanceServices
             #region Old-Use
             // Eski kullanımı:
 
-            HttpMessageHandler loggingHandler = new BinanceLoggingHandler(logger: _logger);
-            HttpClient httpClient = new(handler: loggingHandler);
+            ////HttpMessageHandler loggingHandler = new BinanceLoggingHandler(logger: _logger);
+            ////HttpClient httpClient = new(handler: loggingHandler);
 
-            _spotAccountTrade = new SpotAccountTrade(httpClient, apiKey: _binanceAuthorization.ApiKey, apiSecret: _binanceAuthorization.ApiSecretKey);
+            ////_spotAccountTrade = new SpotAccountTrade(httpClient, apiKey: _binanceAuthorization.ApiKey, apiSecret: _binanceAuthorization.ApiSecretKey);
             #endregion
         }
 
-        public async Task<ResponseBase> CreateNewOrder(CreateNewOrderRequestDto request) =>
-            await GetOrderResponseResult(request) is true ? new ResponseBase(System.Net.HttpStatusCode.Created, "The order was successfully!") :
-            new ResponseBase(System.Net.HttpStatusCode.UnprocessableEntity, "The order was unsuccessful!");
-
-        public async Task<ObjectResponseBase<AllOrdersViewModel>> GetAllOrders(AllOrdersRequestDto request)
+        public async Task<ObjectResponseBase<CreateNewOrderResponseDto>> CreateNewOrder(CreateNewOrderRequestDto request)
         {
             if (request is null || ObjectPropertiesHelper.CheckIsNullObjectProperties(request)) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
 
-            var response = await _binanceClient.SpotApi.Trading.GetOrdersAsync(request.Symbol);
+            var result = await BinanceAccountTradeServiceHelper.GetNewOrderResult(_binanceClient, request);
 
-            var data = response.Data.ToList();
-
-            return new ObjectResponseBase<AllOrdersViewModel>(null, System.Net.HttpStatusCode.OK);
+            return result;
         }
 
-        public async Task<bool> GetOrderResponseResult(CreateNewOrderRequestDto request)
+        public async Task<ListBaseResponse<OrderResponseDto>> GetAllOrders(AllOrdersRequestDto request)
         {
             if (request is null || ObjectPropertiesHelper.CheckIsNullObjectProperties(request)) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
 
-            var tradingType = (OrderSide)request.TradingType.GetTradingType(); // cast edilmesinin sebebi, fonksiyondan dönen nesnenin nullable olmasıdır.
-            var orderType = (SpotOrderType)request.OrderType.GetOrderType();
+            var result = await BinanceAccountTradeServiceHelper.GetAllOrderResult(_binanceClient, request.Symbol);
 
-            //var deneme = await _binanceClient.SpotApi.Trading.PlaceOrderAsync(request.Symbol, tradingType, orderType, request.Quantity);
-            var result = await _binanceClient.SpotApi.Trading.PlaceTestOrderAsync(request.Symbol, tradingType, orderType, request.Quantity);
-
-            return result.Success;
+            return result;
         }
+
+        public async Task<ObjectResponseBase<OrderResponseDto>> GetOrder(GetOrderRequestDto request)
+        {
+            request.OrderId = request.OrderId is null or (long)default ? await GetAllOrders(new AllOrdersRequestDto(request.Symbol)) is ListBaseResponse<OrderResponseDto> orders && orders.StatusCode == HttpStatusCode.OK ? orders.DataList.LastOrDefault().Id : default : request.OrderId;
+
+            if (request is null || ObjectPropertiesHelper.CheckIsNullObjectProperties(request)) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
+
+            var result = await BinanceAccountTradeServiceHelper.GetOrderResult(_binanceClient, request);
+
+            return result;
+        }
+
 
         public async Task<AuthorizedUserDto> TestService(TestDto request)
         {
@@ -87,6 +84,21 @@ namespace BlaX.CryptoAutoTrading.Infrastructure.Services.BinanceServices
             var data = TypeConversion.Conversion<AuthorizedUserObject, AuthorizedUserDto>(testModel);
 
             return data;
+        }
+
+        public async Task<ListBaseResponse<GetAllOrderIdResponseDto>> GetAllOrderId(SymbolRequestBase request)
+        {
+            if (request is null || ObjectPropertiesHelper.CheckIsNullObjectProperties(request)) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
+
+            var result = await BinanceAccountTradeServiceHelper.GetAllOrderIdResult(_binanceClient, request.Symbol);
+
+            return result;
+        }
+
+        public async Task<bool> AnyOrders(SymbolRequestBase request)
+        {
+            var result = await BinanceAccountTradeServiceHelper.AnyOrdersResult(_binanceClient, request.Symbol);
+            return result;
         }
     }
 }

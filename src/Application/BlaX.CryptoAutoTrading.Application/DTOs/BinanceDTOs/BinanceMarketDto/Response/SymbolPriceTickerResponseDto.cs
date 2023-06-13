@@ -1,16 +1,22 @@
-﻿using Newtonsoft.Json;
+﻿using CryptoExchange.Net.Converters;
+using Newtonsoft.Json;
 
 namespace BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceMarketDto.Response
 {
     public class SymbolPriceTickerResponseDto
     {
-        [JsonProperty("symbol")]
-        public string Symbol { get; set; }
-        [JsonProperty("price")]
-        public string Price { get; set; }
-
-        public SymbolPriceTickerResponseDto() { }
-        public SymbolPriceTickerResponseDto(string price) => Price = price;
-        public SymbolPriceTickerResponseDto(string price, string symbol) : this(price) => Symbol = symbol;
+        /// <summary>
+        /// The symbol the price is for
+        /// </summary>
+        public string Symbol { get; set; } = string.Empty;
+        /// <summary>
+        /// The price of the symbol
+        /// </summary>
+        public decimal Price { get; set; }
+        /// <summary>
+        /// Timestamp
+        /// </summary>
+        [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime? Timestamp { get; set; }
     }
 }

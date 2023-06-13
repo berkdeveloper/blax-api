@@ -5,15 +5,15 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Extensions
 {
     public static class BinanceExtensions
     {
-        public static OrderSide? GetTradingType(this TradingTypes tradingTypes) =>
+        public static OrderSide GetTradingType(this TradingTypes tradingTypes) =>
         tradingTypes switch
         {
             TradingTypes.Buy => OrderSide.Buy,
             TradingTypes.Sell => OrderSide.Sell,
-            _ => null,
+            _ => default,
         };
 
-        public static SpotOrderType? GetOrderType(this OrderTypes orderTypes)
+        public static SpotOrderType GetOrderType(this OrderTypes orderTypes)
         => orderTypes switch
         {
             OrderTypes.Limit => SpotOrderType.Limit,
@@ -23,7 +23,7 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Extensions
             OrderTypes.StopLossLimit => SpotOrderType.StopLossLimit,
             OrderTypes.TakeProfit => SpotOrderType.TakeProfit,
             OrderTypes.TakeProfitLimit => SpotOrderType.TakeProfitLimit,
-            _ => null,
+            _ => default,
         };
     }
 }

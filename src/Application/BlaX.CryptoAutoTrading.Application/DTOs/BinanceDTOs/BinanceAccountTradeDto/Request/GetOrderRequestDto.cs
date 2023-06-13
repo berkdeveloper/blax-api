@@ -2,10 +2,9 @@
 
 namespace BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceAccountTradeDto.Request
 {
-    public class AllOrdersRequestDto : SymbolRequestBase
+    public class GetOrderRequestDto : SymbolRequestBase
     {
-        public AllOrdersRequestDto() { }
-
-        public AllOrdersRequestDto(string symbol) : base(symbol) { }
+        public long? OrderId { get; set; }
+        public GetOrderRequestDto() => OrderId ??= default;
     }
 }
