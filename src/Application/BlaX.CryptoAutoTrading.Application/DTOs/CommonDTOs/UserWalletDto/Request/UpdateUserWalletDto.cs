@@ -1,4 +1,5 @@
 ﻿using BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.BaseObjectDto;
+using BlaX.CryptoAutoTrading.Domain.Core.Enums;
 
 namespace BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.UserWalletDto.Request
 {
@@ -25,5 +26,6 @@ namespace BlaX.CryptoAutoTrading.Application.DTOs.CommonDTOs.UserWalletDto.Reque
         /// Kayıp/Zarar
         /// </summary>
         public double Loss { get; set; }
+        public PaymentStatusTypeEnum PaymentStatusType { get; set; }
     }
 }

@@ -15,12 +15,12 @@ namespace BlaX.CryptoAutoTrading.Persistence.Services
     public class UserWalletService : IUserWalletService
     {
         readonly IUnitOfWork _unitOfWork;
-        readonly ILogger _logger;
+        readonly ILogger _seriLogger;
 
-        public UserWalletService(IUnitOfWork unitOfWork, ILogger logger)
+        public UserWalletService(IUnitOfWork unitOfWork, ILogger seriLogger)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
+            _seriLogger = seriLogger;
         }
 
         public async Task<ResponseBase> CreateUserWallet(CreateUserWalletDto request)
@@ -34,7 +34,7 @@ namespace BlaX.CryptoAutoTrading.Persistence.Services
             if (isExisting is true) return new ResponseBase(System.Net.HttpStatusCode.Conflict, "Daha önce yatırma işlemi yaptınız."); // TO DO -> (Bir sonraki kayıtlar patlatır burayı)
             #endregion
 
-            var userWallet = new Domain.Entities.UserWallet(request.UserId, request.AmountMoneyDeposited, request.ProfitRate, request.Earning, request.Loss);
+            var userWallet = new Domain.Entities.UserWallet(request.UserId, request.AmountMoneyDeposited, request.ProfitRate, request.Earning, request.Loss, request.PaymentStatusType);
 
             #region Save Point
             await _unitOfWork.UserWalletWriteRepository.CreateAsync(userWallet, request.UserId);
@@ -42,7 +42,7 @@ namespace BlaX.CryptoAutoTrading.Persistence.Services
             await _unitOfWork.CommitAsync();
             #endregion
 
-            _logger.Information("Kullanıcı para yatırma işlemi başarıyla gerçekleştirildi", userWallet);
+            _seriLogger.Information("Kullanıcı para yatırma işlemi başarıyla gerçekleştirildi", userWallet);
 
             return new ResponseBase(System.Net.HttpStatusCode.Created);
         }
@@ -53,7 +53,7 @@ namespace BlaX.CryptoAutoTrading.Persistence.Services
 
             if (userWallet is null) return new ObjectResponseBase<GetUserWalletDto>(System.Net.HttpStatusCode.NotFound, "Böyle bir işlem bulunamadı.");
 
-            var responseDto = new GetUserWalletDto(userWallet.AmountMoneyDeposited, userWallet.ProfitRate, userWallet.Earning, userWallet.Loss);
+            var responseDto = new GetUserWalletDto(userWallet.AmountMoneyDeposited, userWallet.ProfitRate, userWallet.Earning, userWallet.Loss, userWallet.PaymentStatusType);
 
             return new ObjectResponseBase<GetUserWalletDto>(responseDto, System.Net.HttpStatusCode.OK);
         }
@@ -68,7 +68,7 @@ namespace BlaX.CryptoAutoTrading.Persistence.Services
             userWallet.Loss = request.Loss;
             userWallet.AmountMoneyDeposited = request.AmountMoneyDeposited;
             userWallet.ProfitRate = request.ProfitRate;
-
+            userWallet.PaymentStatusType = request.PaymentStatusType;
 
 
             _unitOfWork.UserWalletWriteRepository.Update(userWallet, request.UserId);

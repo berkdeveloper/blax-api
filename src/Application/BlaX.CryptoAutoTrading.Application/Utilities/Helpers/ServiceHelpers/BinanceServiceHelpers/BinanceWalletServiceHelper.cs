@@ -10,6 +10,9 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.Bi
     {
         public static async Task<ListBaseResponse<UserAssetResponseDto>> GetUserAssetsResul(BinanceClient binanceClient, string assetSymbol)
         {
+            if (string.IsNullOrEmpty(assetSymbol) is false && SymbolHelper.IsValidSymbol(assetSymbol) is false)
+                return new ListBaseResponse<UserAssetResponseDto>(System.Net.HttpStatusCode.NotFound, ResponseErrorMessageConst.InvalidAssetSymbol);
+
             var response = await binanceClient.SpotApi.Account.GetBalancesAsync(assetSymbol);
 
             var userBalances = response.Data.ToList();

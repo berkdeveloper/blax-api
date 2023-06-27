@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BlaX.CryptoAutoTrading.Domain.Core.Constants
+﻿namespace BlaX.CryptoAutoTrading.Domain.Core.Constants
 {
     public static class ResponseErrorMessageConst
     {
@@ -8,5 +6,6 @@ namespace BlaX.CryptoAutoTrading.Domain.Core.Constants
         public const string NoTradingHistoryFoundForUser = "No trading history found for the user.";
         public const string OrderNotFound = "Order not found.";
         public const string UserAssetNotFound = "User asset not found.";
+        public const string InvalidAssetSymbol = "Invalid asset symbol.";
     }
 }
