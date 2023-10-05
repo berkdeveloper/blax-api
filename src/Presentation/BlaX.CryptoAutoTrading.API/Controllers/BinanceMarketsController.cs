@@ -27,9 +27,9 @@ namespace BlaX.CryptoAutoTrading.API.Controllers
         }
 
         [HttpGet("get-old-trades")]
-        [ProducesResponseType(typeof(ListBaseResponse<BinanceTradeResponseDto>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ListBaseResponse<BinanceTradeResponseDto>), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(ListBaseResponse<BinanceTradeResponseDto>), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ListBaseResponse<TradeResponseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ListBaseResponse<TradeResponseDto>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ListBaseResponse<TradeResponseDto>), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetOldTradeLookup([FromQuery] SymbolRequestBase request)
         {
             var response = await _binanceMarketService.GetUserTrades(request);
@@ -43,6 +43,26 @@ namespace BlaX.CryptoAutoTrading.API.Controllers
         public async Task<IActionResult> GetRecentTradesList([FromQuery] RecentTradeRequestDto request)
         {
             var response = await _binanceMarketService.GetRecentTradesList(request);
+            return ActionResponse(response);
+        }
+
+        [HttpGet("get-candlestick-data")]
+        [ProducesResponseType(typeof(ListBaseResponse<CandlestickDataResponseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ListBaseResponse<CandlestickDataResponseDto>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ListBaseResponse<CandlestickDataResponseDto>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetCandlestickDataList([FromQuery] CandlestickDataRequestDto request)
+        {
+            var response = await _binanceMarketService.GetCandlestickData(request);
+            return ActionResponse(response);
+        }
+
+        [HttpGet("get-24h-Ticker")]
+        [ProducesResponseType(typeof(ObjectResponseBase<TickerResponseDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ObjectResponseBase<TickerResponseDto>), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ObjectResponseBase<TickerResponseDto>), (int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> Get24Ticker([FromQuery] SymbolRequestBase request)
+        {
+            var response = await _binanceMarketService.Get24hTicker(request);
             return ActionResponse(response);
         }
     }

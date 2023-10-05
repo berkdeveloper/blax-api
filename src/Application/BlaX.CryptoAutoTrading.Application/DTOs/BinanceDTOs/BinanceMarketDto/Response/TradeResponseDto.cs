@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceMarketDto.Response
 {
-    public class BinanceTradeResponseDto
+    public class TradeResponseDto
     {
         /// <summary>
         /// The symbol the trade is for

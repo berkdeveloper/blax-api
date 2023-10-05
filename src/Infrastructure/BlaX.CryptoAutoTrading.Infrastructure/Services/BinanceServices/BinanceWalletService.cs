@@ -33,6 +33,6 @@ namespace BlaX.CryptoAutoTrading.Infrastructure.Services.BinanceServices
             _seriLogger = seriLogger;
         }
 
-        public async Task<ListBaseResponse<UserAssetResponseDto>> GetUserAsset(UserAssetSymbolRequestDto request) => await BinanceWalletServiceHelper.GetUserAssetsResul(_binanceClient, request.AssetSymbol);
+        public async Task<ListBaseResponse<UserAssetResponseDto>> GetUserAsset(UserAssetSymbolRequestDto request) => await BinanceWalletServiceHelper.GetUserAssetsResult(_binanceClient, request.AssetSymbol);
     }
 }

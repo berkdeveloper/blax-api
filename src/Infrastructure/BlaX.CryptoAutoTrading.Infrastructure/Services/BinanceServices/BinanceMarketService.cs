@@ -41,7 +41,7 @@ namespace BlaX.CryptoAutoTrading.Infrastructure.Services.BinanceServices
         /// <param name="limit">Default 500; max 1000.</param>
         /// <param name="fromId">Trade id to fetch from. Default gets most recent trades.</param>
         /// <returns>Trade list.</returns>
-        public async Task<ListBaseResponse<BinanceTradeResponseDto>> GetUserTrades(SymbolRequestBase request)
+        public async Task<ListBaseResponse<TradeResponseDto>> GetUserTrades(SymbolRequestBase request)
         {
             if (request is null || ObjectPropertiesHelper.CheckIsNullObjectProperties(request) is true) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
 
@@ -82,9 +82,27 @@ namespace BlaX.CryptoAutoTrading.Infrastructure.Services.BinanceServices
 
             var result = await BinanceMarketServiceHelper.GetSymbolPriceTickerResult(_binanceClient, request.Symbol);
 
-            _logger.LogInformation($"{result.Symbol}:{result.Price}");
+            _logger.LogInformation("{Symbol}:{Price}", result.Data.Symbol, result.Data.Price);
 
-            return new ObjectResponseBase<SymbolPriceTickerResponseDto>(result, System.Net.HttpStatusCode.OK);
+            return result;
+        }
+
+        public async Task<ListBaseResponse<CandlestickDataResponseDto>> GetCandlestickData(CandlestickDataRequestDto request)
+        {
+            if (request is null || ObjectPropertiesHelper.IsArgumentsNullOrEmptyCheck(request, r => r.Symbol) is true) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
+
+            var result = await BinanceMarketServiceHelper.GetCandlestickDataResult(_binanceClient, request);
+
+            return result;
+        }
+
+        public async Task<ObjectResponseBase<TickerResponseDto>> Get24hTicker(SymbolRequestBase request)
+        {
+            if (request is null || ObjectPropertiesHelper.CheckIsNullObjectProperties(request) is true) throw new BadRequestErrorException(ExceptionTypes.BadRequest);
+
+            var result = await BinanceMarketServiceHelper.Get24hTickerResult(_binanceClient, request.Symbol);
+
+            return result;
         }
     }
 }

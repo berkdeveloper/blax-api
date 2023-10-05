@@ -5,7 +5,9 @@ using BlaX.CryptoAutoTrading.Application.DTOs.BinanceDTOs.BinanceAccountTradeDto
 using BlaX.CryptoAutoTrading.Application.Exceptions.Common;
 using BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Concrete;
 using BlaX.CryptoAutoTrading.Application.Utilities.Extensions;
+using BlaX.CryptoAutoTrading.Application.Utilities.Handlers;
 using BlaX.CryptoAutoTrading.Domain.Core.Constants;
+using CryptoExchange.Net.Objects;
 using System.Net;
 
 namespace BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.BinanceServiceHelpers
@@ -16,11 +18,22 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.Bi
         {
             var response = await binanceClient.SpotApi.Trading.GetOrdersAsync(symbol);
 
-            var binanceOrders = response.Data.ToList();
+            #region Response Validate
+            if (ApiResponseHandler.HandleList(response) is false) return new ListBaseResponse<OrderResponseDto>(System.Net.HttpStatusCode.BadRequest, ResponseErrorMessageConst.RequestFailed);
 
-            if (binanceOrders.Any() is false) return new ListBaseResponse<OrderResponseDto>(HttpStatusCode.NotFound, ResponseErrorMessageConst.OrderNotFound);
+            var orders = new List<BinanceOrder>();
 
-            var dataList = TypeConversion.ConversionList<BinanceOrder, OrderResponseDto>(binanceOrders);
+            var binanceOrdersResult = ObjectValidationHandler.HandleList(response, dataList =>
+            {
+                orders = dataList.ToList();
+
+                return true;
+            });
+
+            if (binanceOrdersResult is false) return new ListBaseResponse<OrderResponseDto>(HttpStatusCode.NotFound, ResponseErrorMessageConst.OrderNotFound);
+            #endregion
+
+            var dataList = TypeConversion.ConversionList<BinanceOrder, OrderResponseDto>(orders);
 
             return new ListBaseResponse<OrderResponseDto>(dataList, HttpStatusCode.OK);
         }
@@ -29,9 +42,20 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.Bi
         {
             var response = await binanceClient.SpotApi.Trading.GetOrderAsync(request.Symbol, request.OrderId);
 
-            var binanceOrder = response.Data;
+            #region Response Validate
+            if (ApiResponseHandler.Handle(response) is false) return new ObjectResponseBase<OrderResponseDto>(HttpStatusCode.BadRequest, ResponseErrorMessageConst.RequestFailed);
 
-            if (binanceOrder is null) return new ObjectResponseBase<OrderResponseDto>(HttpStatusCode.NotFound, ResponseErrorMessageConst.OrderNotFound);
+            var binanceOrder = new BinanceOrder();
+
+            var binanceOrderResult = ObjectValidationHandler.Handle(response, data =>
+            {
+                binanceOrder = data;
+
+                return true;
+            });
+
+            if (binanceOrderResult is false) return new ObjectResponseBase<OrderResponseDto>(HttpStatusCode.NotFound, ResponseErrorMessageConst.OrderNotFound);
+            #endregion
 
             var data = TypeConversion.Conversion<BinanceOrder, OrderResponseDto>(binanceOrder);
 
@@ -48,18 +72,29 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.Bi
             //var response = await binanceClient.SpotApi.Trading.PlaceOrderAsync(request.Symbol, tradingType, orderType, request.Quantity);
             var response = await binanceClient.SpotApi.Trading.PlaceTestOrderAsync(request.Symbol, tradingType, orderType, request.Quantity);
 
-            var placedOrder = response.Data;
+            #region Response Validate
+            if (ApiResponseHandler.Handle(response) is false) return new ObjectResponseBase<CreateNewOrderResponseDto>(HttpStatusCode.BadRequest, ResponseErrorMessageConst.RequestFailed);
 
-            if (placedOrder is null && response.Error is not null) return new ObjectResponseBase<CreateNewOrderResponseDto>(statusCode: response.ResponseStatusCode.Value, errorMessage: response.Error.Message);
+            var placedOrder = new BinancePlacedOrder();
 
-            if (response.Data is not null && response.Data.Status == Binance.Net.Enums.OrderStatus.Filled)
+            var binancePlaceOrderResult = ObjectValidationHandler.Handle(response, data =>
             {
-                var data = TypeConversion.Conversion<BinancePlacedOrder, CreateNewOrderResponseDto>(response.Data);
+                placedOrder = data;
+
+                return true;
+            });
+
+            if (binancePlaceOrderResult is false) return new ObjectResponseBase<CreateNewOrderResponseDto>(statusCode: response.ResponseStatusCode.Value, errorMessage: response.Error.Message);
+            #endregion
+
+            if (response.Data.Status == Binance.Net.Enums.OrderStatus.Filled)
+            {
+                var data = TypeConversion.Conversion<BinancePlacedOrder, CreateNewOrderResponseDto>(placedOrder);
 
                 return new ObjectResponseBase<CreateNewOrderResponseDto>(data, HttpStatusCode.OK);
             }
 
-            var orderStatus = response.Data is not null ? response.Data.Status.ToString() : "Canceled";
+            var orderStatus = response.Data.Status.ToString();
             var message = $"Order status: {orderStatus}";
 
             return new ObjectResponseBase<CreateNewOrderResponseDto>(HttpStatusCode.NotAcceptable, message);
@@ -69,20 +104,26 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Helpers.ServiceHelpers.Bi
         {
             var response = await binanceClient.SpotApi.Trading.GetOrdersAsync(symbol);
 
-            var binanceOrders = response.Data.ToList();
+            #region Response Validate
+            if (ApiResponseHandler.HandleList(response) is false) return new ListBaseResponse<GetAllOrderIdResponseDto>(HttpStatusCode.BadRequest, ResponseErrorMessageConst.RequestFailed);
 
-            if (binanceOrders.Any() is false) return new ListBaseResponse<GetAllOrderIdResponseDto>(HttpStatusCode.NotFound, ResponseErrorMessageConst.OrderNotFound);
+            var orders = new List<BinanceOrder>();
 
-            var result = binanceOrders.Select(o => new GetAllOrderIdResponseDto() { OrderId = o.Id, Symbol = o.Symbol }).ToList();
+            var ordersResult = ObjectValidationHandler.HandleList(response, dataList =>
+            {
+                orders = dataList.ToList();
+
+                return true;
+            });
+
+            if (ordersResult is false) return new ListBaseResponse<GetAllOrderIdResponseDto>(System.Net.HttpStatusCode.NotFound, ResponseErrorMessageConst.OrderNotFound);
+            #endregion
+
+            var result = orders.Select(o => new GetAllOrderIdResponseDto() { OrderId = o.Id, Symbol = o.Symbol }).ToList();
 
             return new ListBaseResponse<GetAllOrderIdResponseDto>(result, HttpStatusCode.OK);
         }
 
-        public static async Task<bool> AnyOrdersResult(BinanceClient binanceClient, string symbol)
-        {
-            var response = await binanceClient.SpotApi.Trading.GetOrdersAsync(symbol);
-            return response.Data.Any();
-        }
-
+        public static async Task<bool> AnyOrdersResult(BinanceClient binanceClient, string symbol) => await binanceClient.SpotApi.Trading.GetOrdersAsync(symbol) is WebCallResult<IEnumerable<BinanceOrder>> response && response.Success is true && response is not null && response.Data.Any() is true;
     }
 }

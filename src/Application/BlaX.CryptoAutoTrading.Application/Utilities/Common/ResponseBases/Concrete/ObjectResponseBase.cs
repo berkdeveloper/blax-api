@@ -5,8 +5,6 @@ namespace BlaX.CryptoAutoTrading.Application.Utilities.Common.ResponseBases.Conc
 {
     public class ObjectResponseBase<T> : ResponseBase, IObjectResponse<T> where T : class
     {
-        //public virtual T Data { get; }
-
         private T _data;
 
         public virtual T Data

@@ -22,7 +22,7 @@ namespace BlaX.CryptoAutoTrading.API.Controllers
             _userWalletService = userWalletService;
         }
 
-        [UserRoleAuthorization(UserRoleEnum.Admin, UserRoleEnum.User)]
+        [UserRoleAuthorization(UserRoleEnum.User)]
         [HttpGet("[action]")]
         public async Task<ActionResult<string>> Test([FromQuery] TestDto request)
         {

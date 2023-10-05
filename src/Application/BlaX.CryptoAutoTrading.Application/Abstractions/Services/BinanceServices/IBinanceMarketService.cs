@@ -8,7 +8,9 @@ namespace BlaX.CryptoAutoTrading.Application.Abstractions.Services.BinanceServic
     public interface IBinanceMarketService
     {
         Task<ObjectResponseBase<SymbolPriceTickerResponseDto>> GetSymbolPrice(SymbolRequestBase request);
-        Task<ListBaseResponse<BinanceTradeResponseDto>> GetUserTrades(SymbolRequestBase request);
+        Task<ListBaseResponse<TradeResponseDto>> GetUserTrades(SymbolRequestBase request);
         Task<ListBaseResponse<RecentTradeResponseDto>> GetRecentTradesList(RecentTradeRequestDto request);
+        Task<ListBaseResponse<CandlestickDataResponseDto>> GetCandlestickData(CandlestickDataRequestDto request);
+        Task<ObjectResponseBase<TickerResponseDto>> Get24hTicker(SymbolRequestBase request);
     }
 }
